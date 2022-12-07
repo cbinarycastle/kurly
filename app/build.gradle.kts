@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -51,6 +52,9 @@ dependencies {
     implementation(Libs.AndroidX.Lifecycle.VIEWMODEL)
 
     implementation(Libs.Coroutines.ANDROID)
+
+    implementation(Libs.Hilt.ANDROID)
+    kapt(Libs.Hilt.COMPILER)
 
     implementation(Libs.Timber.TIMBER)
 }
