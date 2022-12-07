@@ -56,5 +56,7 @@ dependencies {
     implementation(Libs.Hilt.ANDROID)
     kapt(Libs.Hilt.COMPILER)
 
+    implementation(Libs.Retrofit.RETROFIT)
+
     implementation(Libs.Timber.TIMBER)
 }

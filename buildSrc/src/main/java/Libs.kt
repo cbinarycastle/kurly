@@ -44,6 +44,10 @@ object Libs {
         const val OKHTTP = "com.squareup.okhttp3:okhttp:4.9.3"
     }
 
+    object Retrofit {
+        const val RETROFIT = "com.squareup.retrofit2:retrofit:2.9.0"
+    }
+
     object Timber {
         const val TIMBER = "com.jakewharton.timber:timber:5.0.1"
     }
