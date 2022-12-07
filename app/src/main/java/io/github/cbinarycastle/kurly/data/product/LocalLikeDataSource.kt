@@ -9,4 +9,12 @@ class LocalLikeDataSource(private val heartDao: HeartDao) : LikeDataSource {
         return heartDao.loadAllByProductIds(productIds)
             .map { hearts -> hearts.map { heart -> heart.productId } }
     }
+
+    override fun likeProduct(productId: Int) {
+        heartDao.insert(HeartEntity(productId))
+    }
+
+    override fun unlikeProduct(productId: Int) {
+        heartDao.delete(HeartEntity(productId))
+    }
 }

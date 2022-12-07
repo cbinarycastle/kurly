@@ -15,4 +15,12 @@ class ProductRepository @Inject constructor(
 
     fun getLikedProductIds(productIds: List<Int>): Flow<List<Int>> =
         likeDataSource.getLikedProductIds(productIds)
+
+    fun likeProduct(productId: Int) {
+        likeDataSource.likeProduct(productId)
+    }
+
+    fun unlikeProduct(productId: Int) {
+        likeDataSource.unlikeProduct(productId)
+    }
 }
