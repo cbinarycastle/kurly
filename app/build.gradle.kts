@@ -55,6 +55,10 @@ dependencies {
 
     implementation(Libs.AndroidX.Paging.RUNTIME)
 
+    implementation(Libs.AndroidX.Room.RUNTIME)
+    implementation(Libs.AndroidX.Room.KTX)
+    kapt(Libs.AndroidX.Room.COMPILER)
+
     implementation(Libs.Coroutines.ANDROID)
 
     implementation(Libs.Hilt.ANDROID)

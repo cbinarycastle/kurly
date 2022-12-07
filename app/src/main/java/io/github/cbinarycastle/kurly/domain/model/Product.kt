@@ -7,6 +7,7 @@ data class Product(
     val originalPrice: Int,
     val discountedPrice: Int?,
     val isSoldOut: Boolean,
+    val isLiked: Boolean = false,
 ) {
     val isDiscounted: Boolean
         get() = discountedPrice != null

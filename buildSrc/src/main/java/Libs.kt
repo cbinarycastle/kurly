@@ -18,6 +18,13 @@ object Libs {
             const val RUNTIME = "androidx.paging:paging-runtime-ktx:3.1.1"
         }
 
+        object Room {
+            private const val VERSION = "2.4.3"
+            const val COMPILER = "androidx.room:room-compiler:$VERSION"
+            const val KTX = "androidx.room:room-ktx:$VERSION"
+            const val RUNTIME = "androidx.room:room-runtime:$VERSION"
+        }
+
         object Test {
             const val ESPRESSO = "androidx.test.espresso:espresso-core:3.4.0"
             const val JUNIT_EXT = "androidx.test.ext:junit:1.1.3"

@@ -5,8 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.cbinarycastle.kurly.data.KurlyService
-import io.github.cbinarycastle.kurly.data.product.ProductDataSource
-import io.github.cbinarycastle.kurly.data.product.RemoteProductDataSource
+import io.github.cbinarycastle.kurly.data.product.*
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -18,4 +17,8 @@ object DataSourceModule {
     fun provideProductDataSource(
         kurlyService: KurlyService,
     ): ProductDataSource = RemoteProductDataSource(kurlyService)
+
+    @Singleton
+    @Provides
+    fun provideLikeDataSource(heartDao: HeartDao): LikeDataSource = LocalLikeDataSource(heartDao)
 }
