@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 private const val BASE_URL = "https://kurly.com/"
 
@@ -20,6 +21,7 @@ private const val BASE_URL = "https://kurly.com/"
 @Module
 object NetworkModule {
 
+    @Singleton
     @Provides
     fun provideHttpClient(@ApplicationContext context: Context) = OkHttpClient.Builder()
         .addInterceptor(MockInterceptor(context))
@@ -32,6 +34,7 @@ object NetworkModule {
         }
         .build()
 
+    @Singleton
     @Provides
     fun provideKurlyService(httpClient: OkHttpClient) = Retrofit.Builder()
         .baseUrl(BASE_URL)

@@ -14,6 +14,10 @@ object Libs {
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
         }
 
+        object Paging {
+            const val RUNTIME = "androidx.paging:paging-runtime-ktx:3.1.1"
+        }
+
         object Test {
             const val ESPRESSO = "androidx.test.espresso:espresso-core:3.4.0"
             const val JUNIT_EXT = "androidx.test.ext:junit:1.1.3"

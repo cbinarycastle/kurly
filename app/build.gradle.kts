@@ -53,6 +53,8 @@ dependencies {
 
     implementation(Libs.AndroidX.Lifecycle.VIEWMODEL)
 
+    implementation(Libs.AndroidX.Paging.RUNTIME)
+
     implementation(Libs.Coroutines.ANDROID)
 
     implementation(Libs.Hilt.ANDROID)
