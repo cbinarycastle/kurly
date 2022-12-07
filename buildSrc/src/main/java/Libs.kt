@@ -41,11 +41,15 @@ object Libs {
     }
 
     object OkHttp {
-        const val OKHTTP = "com.squareup.okhttp3:okhttp:4.9.3"
+        private const val VERSION = "4.10.0"
+        const val OKHTTP = "com.squareup.okhttp3:okhttp:$VERSION"
+        const val LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:$VERSION"
     }
 
     object Retrofit {
-        const val RETROFIT = "com.squareup.retrofit2:retrofit:2.9.0"
+        private const val VERSION = "2.9.0"
+        const val RETROFIT = "com.squareup.retrofit2:retrofit:$VERSION"
+        const val CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:$VERSION"
     }
 
     object Timber {

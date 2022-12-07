@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":mockserver"))
+
     coreLibraryDesugaring(Libs.Android.DESUGARING)
 
     implementation(Libs.Android.MATERIAL)
@@ -56,7 +58,10 @@ dependencies {
     implementation(Libs.Hilt.ANDROID)
     kapt(Libs.Hilt.COMPILER)
 
+    implementation(Libs.OkHttp.LOGGING_INTERCEPTOR)
+
     implementation(Libs.Retrofit.RETROFIT)
+    implementation(Libs.Retrofit.CONVERTER_GSON)
 
     implementation(Libs.Timber.TIMBER)
 }
