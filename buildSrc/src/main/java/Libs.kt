@@ -9,6 +9,7 @@ object Libs {
         const val APPCOMPAT = "androidx.appcompat:appcompat:1.4.2"
         const val CORE_KTX = "androidx.core:core-ktx:1.8.0"
         const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"
+        const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:1.5.4"
 
         object Lifecycle {
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
@@ -29,6 +30,10 @@ object Libs {
             const val ESPRESSO = "androidx.test.espresso:espresso-core:3.4.0"
             const val JUNIT_EXT = "androidx.test.ext:junit:1.1.3"
         }
+    }
+
+    object Coil {
+        const val COIL = "io.coil-kt:coil:2.2.2"
     }
 
     object Coroutines {

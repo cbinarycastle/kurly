@@ -9,7 +9,7 @@ data class Product(
     val isSoldOut: Boolean,
     val isLiked: Boolean = false,
 ) {
-    val isDiscounted: Boolean
+    val discounted: Boolean
         get() = discountedPrice != null
 
     val discountRate: Double
@@ -20,4 +20,7 @@ data class Product(
                 discountedPrice.toDouble() / originalPrice.toDouble()
             }
         }
+
+    val salesPrice: Int
+        get() = discountedPrice ?: originalPrice
 }

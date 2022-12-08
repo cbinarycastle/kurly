@@ -12,3 +12,6 @@ sealed class Result<out R> {
         Loading -> "Loading"
     }
 }
+
+val <T> Result<T>.data: T?
+    get() = (this as? Result.Success<T>)?.data

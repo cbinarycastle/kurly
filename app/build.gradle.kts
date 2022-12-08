@@ -2,16 +2,17 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
 android {
     namespace = "io.github.cbinarycastle.kurly"
-    compileSdk = 33
+    compileSdk = 32
 
     defaultConfig {
         applicationId = "io.github.cbinarycastle.kurly"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 32
         versionCode = 1
         versionName = "1.0"
 
@@ -38,6 +39,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    dataBinding {
+        enable = true
+    }
 }
 
 dependencies {
@@ -50,6 +55,7 @@ dependencies {
     implementation(Libs.AndroidX.APPCOMPAT)
     implementation(Libs.AndroidX.CORE_KTX)
     implementation(Libs.AndroidX.CONSTRAINT_LAYOUT)
+    implementation(Libs.AndroidX.FRAGMENT_KTX)
 
     implementation(Libs.AndroidX.Lifecycle.VIEWMODEL)
 
@@ -58,6 +64,8 @@ dependencies {
     implementation(Libs.AndroidX.Room.RUNTIME)
     implementation(Libs.AndroidX.Room.KTX)
     kapt(Libs.AndroidX.Room.COMPILER)
+
+    implementation(Libs.Coil.COIL)
 
     implementation(Libs.Coroutines.ANDROID)
 

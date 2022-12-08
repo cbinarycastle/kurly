@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Kurly</string>
+
+    <string name="percentage_format">%f%</string>
+    <string name="price_format">%,d원</string>
+
+    <string name="product_image_description">상품 이미지</string>
+    <string name="heart_icon_description">찜하기</string>
 </resources>
