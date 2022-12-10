@@ -11,7 +11,7 @@ class LikeProductUseCase @Inject constructor(
     @IoDispatcher ioDispatcher: CoroutineDispatcher,
 ) : UseCase<Product, Unit>(ioDispatcher) {
 
-    override fun execute(params: Product) {
+    override suspend fun execute(params: Product) {
         productRepository.likeProduct(productId = params.id)
     }
 }

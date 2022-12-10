@@ -18,5 +18,5 @@ abstract class UseCase<P, R>(private val dispatcher: CoroutineDispatcher) {
         Result.Error(e)
     }
 
-    abstract fun execute(params: P): R
+    abstract suspend fun execute(params: P): R
 }

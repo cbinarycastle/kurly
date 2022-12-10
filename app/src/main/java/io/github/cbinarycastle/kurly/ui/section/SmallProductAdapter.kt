@@ -6,7 +6,7 @@ import io.github.cbinarycastle.kurly.databinding.ViewholderSmallProductBinding
 import io.github.cbinarycastle.kurly.domain.model.Product
 import io.github.cbinarycastle.kurly.util.layoutInflater
 
-class HorizontalProductAdapter :
+class SmallProductAdapter :
     ListAdapter<Product, SmallProductViewHolder>(ProductDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallProductViewHolder {

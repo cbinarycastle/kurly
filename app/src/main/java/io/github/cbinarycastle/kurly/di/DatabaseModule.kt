@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.cbinarycastle.kurly.data.DATABASE_NAME
 import io.github.cbinarycastle.kurly.data.KurlyDatabase
+import io.github.cbinarycastle.kurly.data.product.ProductDao
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -24,4 +25,8 @@ object DatabaseModule {
         KurlyDatabase::class.java,
         DATABASE_NAME
     ).build()
+
+    @Singleton
+    @Provides
+    fun provideProductDao(kurlyDatabase: KurlyDatabase): ProductDao = kurlyDatabase.productDao()
 }

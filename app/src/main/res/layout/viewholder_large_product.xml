@@ -9,16 +9,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp">
 
         <ImageView
             android:id="@+id/productImageView"
-            android:layout_width="150dp"
-            android:layout_height="200dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:contentDescription="@string/product_image_description"
             android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="H,6:4"
             app:imageUrl="@{product.image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -30,13 +31,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="8dp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:ellipsize="end"
             android:text="@{product.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productImageView"
-            tools:text="[샐러딩] 레디믹스 스탠다드 150g" />
+            tools:text="[Kurly's] R15 통밀 모닝롤" />
 
         <Space
             android:id="@+id/spaceBelowName"
@@ -67,19 +68,20 @@
             app:layout_goneMarginStart="0dp"
             app:layout_constraintStart_toEndOf="@id/discountRateTextView"
             app:layout_constraintTop_toBottomOf="@id/spaceBelowName"
-            tools:text="6,200원" />
+            tools:text="3,500원" />
 
         <TextView
             android:id="@+id/originalPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:textColor="@color/disabled"
             app:visible="@{product.discounted}"
             app:price="@{product.originalPrice}"
             app:strikethrough="@{true}"
-            app:layout_constraintStart_toStartOf="@id/nameTextView"
-            app:layout_constraintTop_toBottomOf="@id/discountRateTextView"
-            tools:text="8,000원" />
+            app:layout_constraintStart_toEndOf="@id/salesPriceTextView"
+            app:layout_constraintBottom_toBottomOf="@id/salesPriceTextView"
+            tools:text="5,000원" />
 
         <ImageButton
             android:id="@+id/heartImageButton"

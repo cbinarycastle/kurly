@@ -1,14 +1,19 @@
 package io.github.cbinarycastle.kurly.util
 
 import android.graphics.Paint
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import io.github.cbinarycastle.kurly.R
-import io.github.cbinarycastle.kurly.domain.model.SectionType
-import kotlin.math.round
+import kotlin.math.roundToInt
+
+@BindingAdapter("visible")
+fun setVisible(view: View, isVisible: Boolean) {
+    view.isVisible = isVisible
+}
 
 @BindingAdapter("strikethrough")
 fun setStrikethrough(textView: TextView, enabled: Boolean) {
@@ -22,7 +27,7 @@ fun setStrikethrough(textView: TextView, enabled: Boolean) {
 @BindingAdapter("percentage")
 fun setPercentage(textView: TextView, value: Double) {
     val percentageFormat = textView.context.getString(R.string.percentage_format)
-    textView.text = String.format(percentageFormat, round(value * 100))
+    textView.text = String.format(percentageFormat, (value * 100).roundToInt())
 }
 
 @BindingAdapter("price")
@@ -31,15 +36,7 @@ fun setPrice(textView: TextView, value: Int) {
     textView.text = String.format(priceFormat, value)
 }
 
-@BindingAdapter("sectionType")
-fun setLayoutManager(recyclerView: RecyclerView, sectionType: SectionType) {
-    recyclerView.layoutManager = when (sectionType) {
-        SectionType.VERTICAL -> LinearLayoutManager(recyclerView.context)
-        SectionType.HORIZONTAL -> {
-            LinearLayoutManager(recyclerView.context).apply {
-                orientation = RecyclerView.HORIZONTAL
-            }
-        }
-        SectionType.GRID -> GridLayoutManager(recyclerView.context, 3)
-    }
+@BindingAdapter("imageUrl")
+fun setImageUrl(imageView: ImageView, imageUrl: String) {
+    imageView.load(imageUrl)
 }

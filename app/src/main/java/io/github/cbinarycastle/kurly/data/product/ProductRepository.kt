@@ -2,25 +2,29 @@ package io.github.cbinarycastle.kurly.data.product
 
 import io.github.cbinarycastle.kurly.domain.model.Product
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ProductRepository @Inject constructor(
-    private val productDataSource: ProductDataSource,
-    private val likeDataSource: LikeDataSource,
+    private val localProductDataSource: LocalProductDataSource,
+    private val remoteProductDataSource: RemoteProductDataSource,
 ) {
-    suspend fun getProducts(sectionId: Int): List<Product> =
-        productDataSource.getProducts(sectionId)
+    fun getProducts(sectionId: Int): Flow<List<Product>> = flow {
+        val products = remoteProductDataSource.getProducts(sectionId)
+        localProductDataSource.saveProducts(sectionId, products)
 
-    fun getLikedProductIds(productIds: List<Int>): Flow<List<Int>> =
-        likeDataSource.getLikedProductIds(productIds)
-
-    fun likeProduct(productId: Int) {
-        likeDataSource.likeProduct(productId)
+        val savedProducts = localProductDataSource.getProducts(sectionId)
+        emitAll(savedProducts)
     }
 
-    fun unlikeProduct(productId: Int) {
-        likeDataSource.unlikeProduct(productId)
+    suspend fun likeProduct(productId: Int) {
+        localProductDataSource.likeProduct(productId)
+    }
+
+    suspend fun unlikeProduct(productId: Int) {
+        localProductDataSource.unlikeProduct(productId)
     }
 }

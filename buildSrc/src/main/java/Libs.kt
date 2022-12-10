@@ -15,10 +15,6 @@ object Libs {
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
         }
 
-        object Paging {
-            const val RUNTIME = "androidx.paging:paging-runtime-ktx:3.1.1"
-        }
-
         object Room {
             private const val VERSION = "2.4.3"
             const val COMPILER = "androidx.room:room-compiler:$VERSION"

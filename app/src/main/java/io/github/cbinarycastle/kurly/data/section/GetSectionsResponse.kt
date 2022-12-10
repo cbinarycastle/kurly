@@ -1,5 +1,6 @@
 package io.github.cbinarycastle.kurly.data.section
 
+import io.github.cbinarycastle.kurly.domain.model.Page
 import io.github.cbinarycastle.kurly.domain.model.Section
 import io.github.cbinarycastle.kurly.domain.model.SectionType
 
@@ -16,6 +17,11 @@ data class SectionInfo(
 )
 
 data class PagingInfo(val nextPage: Int)
+
+fun GetSectionsResponse.toSectionPage() = Page(
+    data = data.map(SectionInfo::toSection),
+    nextPage = paging?.nextPage
+)
 
 fun SectionInfo.toSection() = Section(
     id = id,

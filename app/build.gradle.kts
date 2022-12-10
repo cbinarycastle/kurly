@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-parcelize")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -59,8 +60,6 @@ dependencies {
 
     implementation(Libs.AndroidX.Lifecycle.VIEWMODEL)
 
-    implementation(Libs.AndroidX.Paging.RUNTIME)
-
     implementation(Libs.AndroidX.Room.RUNTIME)
     implementation(Libs.AndroidX.Room.KTX)
     kapt(Libs.AndroidX.Room.COMPILER)
@@ -71,6 +70,8 @@ dependencies {
 
     implementation(Libs.Hilt.ANDROID)
     kapt(Libs.Hilt.COMPILER)
+
+    implementation(Libs.JUnit.JUNIT)
 
     implementation(Libs.OkHttp.LOGGING_INTERCEPTOR)
 
