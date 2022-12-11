@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kurly"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -28,6 +29,17 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-    </application>
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="io.github.cbinarycastle.kurly.util.TimberInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
+    </application>
 </manifest>

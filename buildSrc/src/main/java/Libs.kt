@@ -10,6 +10,7 @@ object Libs {
         const val CORE_KTX = "androidx.core:core-ktx:1.8.0"
         const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"
         const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:1.5.4"
+        const val STARTUP = "androidx.startup:startup-runtime:1.1.1"
 
         object Lifecycle {
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
