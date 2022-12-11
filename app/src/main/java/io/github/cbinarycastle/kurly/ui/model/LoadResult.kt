@@ -1,6 +1,6 @@
 package io.github.cbinarycastle.kurly.ui.model
 
-data class DataWithLoadState<T>(
+data class LoadResult<T>(
     val data: T,
-    val loadState: LoadState,
+    val loadStates: LoadStates,
 )

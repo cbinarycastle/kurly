@@ -62,6 +62,7 @@ dependencies {
     implementation(Libs.AndroidX.CONSTRAINT_LAYOUT)
     implementation(Libs.AndroidX.FRAGMENT_KTX)
     implementation(Libs.AndroidX.STARTUP)
+    implementation(Libs.AndroidX.SWIPE_REFRESH_LAYOUT)
 
     implementation(Libs.AndroidX.Lifecycle.VIEWMODEL)
 

@@ -11,6 +11,7 @@ object Libs {
         const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"
         const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:1.5.4"
         const val STARTUP = "androidx.startup:startup-runtime:1.1.1"
+        const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
         object Lifecycle {
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"

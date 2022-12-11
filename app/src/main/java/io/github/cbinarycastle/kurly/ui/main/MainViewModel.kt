@@ -6,57 +6,95 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.cbinarycastle.kurly.domain.LoadSectionsUseCase
 import io.github.cbinarycastle.kurly.domain.model.Result
 import io.github.cbinarycastle.kurly.domain.model.Section
-import io.github.cbinarycastle.kurly.ui.model.DataWithLoadState
-import io.github.cbinarycastle.kurly.ui.model.LoadState
-import io.github.cbinarycastle.kurly.ui.model.loadState
+import io.github.cbinarycastle.kurly.ui.model.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val INITIAL_PAGE = 1
-
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase) : ViewModel() {
 
-    private var nextPage: Int? = INITIAL_PAGE
+    private var nextPage: Int? = LoadEvent.Refresh.page
 
-    private val _loadEvent = MutableSharedFlow<Int>()
+    private val _loadEvent = MutableSharedFlow<LoadEvent>()
     private val loadEvent = flow {
-        emit(INITIAL_PAGE)
+        emit(LoadEvent.Refresh)
         emitAll(_loadEvent)
     }
 
-    val sections: StateFlow<DataWithLoadState<List<Section>>> = loadEvent
-        .flatMapLatest { page -> loadSectionsUseCase(page) }
-        .onEach {
-            if (it is Result.Success) {
-                val page = it.data
+    private val loadEventAndResult = loadEvent
+        .flatMapLatest { event ->
+            loadSectionsUseCase(event.page).map { result -> event to result }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null
+        )
+
+    val sections: StateFlow<LoadResult<List<Section>>> = loadEventAndResult
+        .filterNotNull()
+        .onEach { (_, result) ->
+            if (result is Result.Success) {
+                val page = result.data
                 sectionList.addAll(page.data)
                 nextPage = page.nextPage
             }
         }
-        .map { DataWithLoadState(sectionList.toList(), it.loadState) }
+        .map { (event, result) ->
+            LoadResult(
+                data = sectionList.toList(),
+                loadStates = LoadStates(
+                    refresh = if (event == LoadEvent.Refresh) result.loadState else LoadState.NOT_LOADING,
+                    append = if (event is LoadEvent.Append) result.loadState else LoadState.NOT_LOADING
+                )
+            )
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            initialValue = DataWithLoadState(emptyList(), LoadState.NOT_LOADING)
+            initialValue = LoadResult(data = emptyList(), loadStates = LoadStates.IDLE)
+        )
+
+    private val latestLoadEvent = loadEventAndResult
+        .filterNotNull()
+        .map { (event, _) -> event }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null
         )
 
     private val sectionList = mutableListOf<Section>()
 
+    fun refresh() {
+        sectionList.clear()
+        load(LoadEvent.Refresh)
+    }
+
     fun loadMore() {
-        if (sections.value.loadState == LoadState.NOT_LOADING) {
+        val loadStates = sections.value.loadStates
+
+        if (loadStates.refresh == LoadState.NOT_LOADING &&
+            loadStates.append == LoadState.NOT_LOADING
+        ) {
             nextPage?.let {
-                load(it)
+                load(LoadEvent.Append(it))
             }
         }
     }
 
-    private fun load(page: Int) {
+    fun retry() {
+        latestLoadEvent.value?.let {
+            load(it)
+        }
+    }
+
+    private fun load(event: LoadEvent) {
         viewModelScope.launch {
-            _loadEvent.emit(page)
+            _loadEvent.emit(event)
         }
     }
 }

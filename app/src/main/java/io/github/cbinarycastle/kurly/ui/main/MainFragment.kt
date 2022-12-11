@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.cbinarycastle.kurly.databinding.FragmentMainBinding
+import io.github.cbinarycastle.kurly.ui.model.LoadState
 import io.github.cbinarycastle.kurly.ui.section.SectionAdapter
 import io.github.cbinarycastle.kurly.util.launchAndRepeatWithViewLifecycle
 import io.github.cbinarycastle.kurly.widget.LoadStateAdapter
@@ -35,8 +36,12 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+
         val sectionAdapter = SectionAdapter()
-        val loadStateAdapter = LoadStateAdapter(retry = {})
+        val loadStateAdapter = LoadStateAdapter(retry = viewModel::retry)
         binding.sectionsRecyclerView.adapter = ConcatAdapter(sectionAdapter, loadStateAdapter)
 
         binding.sectionsRecyclerView.addOnScrollListener(object : OnScrollListener() {
@@ -57,8 +62,9 @@ class MainFragment : Fragment() {
         launchAndRepeatWithViewLifecycle {
             viewModel.sections.collect {
                 sectionAdapter.submitList(it.data) {
-                    loadStateAdapter.loadState = it.loadState
+                    loadStateAdapter.loadState = it.loadStates.append
                 }
+                binding.swipeRefreshLayout.isRefreshing = it.loadStates.refresh == LoadState.LOADING
             }
         }
     }
