@@ -16,13 +16,19 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase) : ViewModel() {
 
-    private var nextPage: Int? = LoadEvent.Refresh.page
+    private var nextPage: Int? = null
 
     private val _loadEvent = MutableSharedFlow<LoadEvent>()
     private val loadEvent = flow {
         emit(LoadEvent.Refresh)
         emitAll(_loadEvent)
     }
+
+    private val latestLoadEvent = loadEvent.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null
+    )
 
     private val loadEventAndResult = loadEvent
         .flatMapLatest { event ->
@@ -56,15 +62,6 @@ class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase
             scope = viewModelScope,
             started = SharingStarted.Lazily,
             initialValue = LoadResult(data = emptyList(), loadStates = LoadStates.IDLE)
-        )
-
-    private val latestLoadEvent = loadEventAndResult
-        .filterNotNull()
-        .map { (event, _) -> event }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null
         )
 
     private val sectionList = mutableListOf<Section>()
