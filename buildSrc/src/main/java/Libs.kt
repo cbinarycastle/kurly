@@ -23,6 +23,10 @@ object Libs {
             const val RUNTIME = "androidx.room:room-runtime:$VERSION"
         }
 
+        object RecyclerView {
+            const val RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.2.1"
+        }
+
         object Test {
             const val ESPRESSO = "androidx.test.espresso:espresso-core:3.4.0"
             const val JUNIT_EXT = "androidx.test.ext:junit:1.1.3"

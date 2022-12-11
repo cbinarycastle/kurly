@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Kurly</string>
 
+    <string name="retry">재시도</string>
+
     <string name="percentage_format">%d%%</string>
     <string name="price_format">%,d원</string>
 

@@ -2,12 +2,14 @@ package io.github.cbinarycastle.kurly.data.product
 
 import io.github.cbinarycastle.kurly.domain.model.Product
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 class LocalProductDataSourceImpl(private val productDao: ProductDao) : LocalProductDataSource {
 
     override fun getProducts(sectionId: Int): Flow<List<Product>> {
         return productDao.loadAllBySectionId(sectionId)
+            .distinctUntilChanged()
             .map { it.map(ProductEntity::toProduct) }
     }
 

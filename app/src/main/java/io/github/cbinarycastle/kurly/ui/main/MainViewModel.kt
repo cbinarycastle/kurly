@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.cbinarycastle.kurly.domain.LoadSectionsUseCase
-import io.github.cbinarycastle.kurly.domain.model.Page
 import io.github.cbinarycastle.kurly.domain.model.Result
 import io.github.cbinarycastle.kurly.domain.model.Section
-import io.github.cbinarycastle.kurly.domain.model.data
+import io.github.cbinarycastle.kurly.ui.model.DataWithLoadState
+import io.github.cbinarycastle.kurly.ui.model.LoadState
+import io.github.cbinarycastle.kurly.ui.model.loadState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,54 +20,37 @@ private const val INITIAL_PAGE = 1
 @HiltViewModel
 class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase) : ViewModel() {
 
+    private var nextPage: Int? = INITIAL_PAGE
+
     private val _loadEvent = MutableSharedFlow<Int>()
     private val loadEvent = flow {
         emit(INITIAL_PAGE)
         emitAll(_loadEvent)
     }
 
-    private val sectionPageResult: StateFlow<Result<Page<Section>>> = loadEvent
+    val sections: StateFlow<DataWithLoadState<List<Section>>> = loadEvent
         .flatMapLatest { page -> loadSectionsUseCase(page) }
+        .onEach {
+            if (it is Result.Success) {
+                val page = it.data
+                sectionList.addAll(page.data)
+                nextPage = page.nextPage
+            }
+        }
+        .map { DataWithLoadState(sectionList.toList(), it.loadState) }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = Result.Loading
-        )
-
-    private val sectionPage: StateFlow<Page<Section>?> = sectionPageResult
-        .map { it.data }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    private val _sections = MutableStateFlow<List<Section>>(emptyList())
-    val sections = _sections.asStateFlow()
-
-    val isLoading: StateFlow<Boolean> = sectionPageResult
-        .map { it == Result.Loading }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = false
+            started = SharingStarted.Lazily,
+            initialValue = DataWithLoadState(emptyList(), LoadState.NOT_LOADING)
         )
 
     private val sectionList = mutableListOf<Section>()
 
-    init {
-        viewModelScope.launch {
-            sectionPage
-                .filterNotNull()
-                .collect {
-                    addSections(it.data)
-                }
-        }
-    }
-
     fun loadMore() {
-        sectionPage.value?.nextPage?.let {
-            load(it)
+        if (sections.value.loadState == LoadState.NOT_LOADING) {
+            nextPage?.let {
+                load(it)
+            }
         }
     }
 
@@ -74,11 +58,6 @@ class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase
         viewModelScope.launch {
             _loadEvent.emit(page)
         }
-    }
-
-    private suspend fun addSections(sections: List<Section>) {
-        sectionList.addAll(sections)
-        _sections.emit(sectionList)
     }
 }
 

@@ -21,6 +21,8 @@ class LoadSectionsUseCase @Inject constructor(
 ) : FlowUseCase<Int, Page<Section>>(ioDispatcher) {
 
     override fun execute(params: Int): Flow<Result<Page<Section>>> = flow {
+        emit(Result.Loading)
+
         val sectionPage = sectionRepository.getSections(page = params)
 
         val sectionPageWithProductFlow = sectionPage.data.map { it.toFlowWithProducts() }
@@ -31,8 +33,7 @@ class LoadSectionsUseCase @Inject constructor(
     }
 
     private fun Section.toFlowWithProducts(): Flow<Section> {
-        return productRepository.getProducts(sectionId = this.id).map { products ->
-            this.copy(products = products)
-        }
+        return productRepository.getProducts(sectionId = this.id)
+            .map { this.copy(products = it) }
     }
 }

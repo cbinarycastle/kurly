@@ -44,6 +44,10 @@ android {
     dataBinding {
         enable = true
     }
+
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
@@ -64,6 +68,8 @@ dependencies {
     implementation(Libs.AndroidX.Room.RUNTIME)
     implementation(Libs.AndroidX.Room.KTX)
     kapt(Libs.AndroidX.Room.COMPILER)
+
+    implementation(Libs.AndroidX.RecyclerView.RECYCLERVIEW)
 
     implementation(Libs.Coil.COIL)
 

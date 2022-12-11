@@ -1,5 +1,6 @@
 package io.github.cbinarycastle.kurly.data.section
 
+import com.google.gson.annotations.SerializedName
 import io.github.cbinarycastle.kurly.domain.model.Page
 import io.github.cbinarycastle.kurly.domain.model.Section
 import io.github.cbinarycastle.kurly.domain.model.SectionType
@@ -16,7 +17,7 @@ data class SectionInfo(
     val url: String,
 )
 
-data class PagingInfo(val nextPage: Int)
+data class PagingInfo(@SerializedName("next_page") val nextPage: Int)
 
 fun GetSectionsResponse.toSectionPage() = Page(
     data = data.map(SectionInfo::toSection),

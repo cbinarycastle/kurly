@@ -10,5 +10,6 @@ class SmallProductViewHolder(
 
     fun bind(product: Product) {
         binding.product = product
+        binding.executePendingBindings()
     }
 }
