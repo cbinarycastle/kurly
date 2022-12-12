@@ -74,11 +74,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/disabled"
-            app:visible="@{product.discounted}"
+            app:invisible="@{!product.discounted}"
             app:price="@{product.originalPrice}"
             app:strikethrough="@{true}"
             app:layout_constraintStart_toStartOf="@id/nameTextView"
-            app:layout_constraintTop_toBottomOf="@id/discountRateTextView"
+            app:layout_constraintTop_toBottomOf="@id/salesPriceTextView"
             tools:text="8,000원" />
 
         <ImageButton

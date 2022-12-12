@@ -4,6 +4,7 @@ import android.graphics.Paint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import coil.load
@@ -13,6 +14,11 @@ import kotlin.math.roundToInt
 @BindingAdapter("visible")
 fun setVisible(view: View, isVisible: Boolean) {
     view.isVisible = isVisible
+}
+
+@BindingAdapter("invisible")
+fun setInvisible(view: View, isInvisible: Boolean) {
+    view.isInvisible = isInvisible
 }
 
 @BindingAdapter("strikethrough")
