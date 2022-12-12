@@ -17,7 +17,7 @@ data class Product(
             return if (discountedPrice == null) {
                 0.0
             } else {
-                discountedPrice.toDouble() / originalPrice.toDouble()
+                (originalPrice.toDouble() - discountedPrice.toDouble()) / originalPrice.toDouble()
             }
         }
 
