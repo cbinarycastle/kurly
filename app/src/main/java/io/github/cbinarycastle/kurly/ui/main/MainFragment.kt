@@ -37,7 +37,10 @@ class MainFragment : Fragment() {
             viewModel.refresh()
         }
 
-        val sectionAdapter = SectionAdapter(viewModel::toggleLikeProduct)
+        val sectionAdapter = SectionAdapter(
+            toggleLikeProduct = viewModel::toggleLikeProduct,
+            viewLifecycle = viewLifecycleOwner.lifecycle
+        )
         val loadStateAdapter = LoadStateAdapter(viewModel::retry)
 
         with(binding.sectionsRecyclerView) {
@@ -46,7 +49,7 @@ class MainFragment : Fragment() {
         }
 
         launchAndRepeatWithViewLifecycle {
-            viewModel.sections.collect {
+            viewModel.sectionItems.collect {
                 sectionAdapter.submitList(it.data) {
                     loadStateAdapter.loadState = it.loadStates.append
                 }

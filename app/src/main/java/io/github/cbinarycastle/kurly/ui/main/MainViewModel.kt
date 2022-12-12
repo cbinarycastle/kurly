@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.cbinarycastle.kurly.domain.LikeProductUseCase
+import io.github.cbinarycastle.kurly.domain.LoadProductsUseCase
 import io.github.cbinarycastle.kurly.domain.LoadSectionsUseCase
 import io.github.cbinarycastle.kurly.domain.UnlikeProductUseCase
 import io.github.cbinarycastle.kurly.domain.model.Product
 import io.github.cbinarycastle.kurly.domain.model.Result
 import io.github.cbinarycastle.kurly.domain.model.Section
+import io.github.cbinarycastle.kurly.domain.model.data
 import io.github.cbinarycastle.kurly.ui.model.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -19,9 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     loadSectionsUseCase: LoadSectionsUseCase,
+    private val loadProductsUseCase: LoadProductsUseCase,
     private val likeProductUseCase: LikeProductUseCase,
     private val unlikeProductUseCase: UnlikeProductUseCase,
 ) : ViewModel() {
+
+    private val productsFlowCache = mutableMapOf<Int, StateFlow<List<Product>>>()
 
     private val _loadEvent = MutableSharedFlow<LoadEvent>()
     private val loadEvent = flow {
@@ -45,7 +50,7 @@ class MainViewModel @Inject constructor(
             initialValue = null
         )
 
-    val sections: StateFlow<LoadResult<List<Section>>> = loadEventAndResult
+    val sectionItems: StateFlow<LoadResult<List<SectionItem>>> = loadEventAndResult
         .filterNotNull()
         .onEach { (_, result) ->
             if (result is Result.Success) {
@@ -56,7 +61,10 @@ class MainViewModel @Inject constructor(
         }
         .map { (event, result) ->
             LoadResult(
-                data = sectionPagingData.items,
+                data = sectionPagingData.items.map { section ->
+                    val productsFlow = loadProductsFlow(section.id)
+                    SectionItem(section, productsFlow)
+                },
                 loadStates = LoadStates(
                     refresh = if (event == LoadEvent.Refresh) result.loadState else LoadState.NOT_LOADING,
                     append = if (event is LoadEvent.Append) result.loadState else LoadState.NOT_LOADING
@@ -73,13 +81,26 @@ class MainViewModel @Inject constructor(
 
     private val sectionPagingData = PagingData<Section>()
 
+    private fun loadProductsFlow(sectionId: Int): Flow<List<Product>> {
+        return productsFlowCache[sectionId] ?: run {
+            loadProductsUseCase(sectionId)
+                .map { it.data ?: emptyList() }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.Eagerly,
+                    initialValue = emptyList()
+                )
+                .also { productsFlowCache[sectionId] = it }
+        }
+    }
+
     fun refresh() {
         sectionPagingData.clear()
         load(LoadEvent.Refresh)
     }
 
     fun loadMore() {
-        val loadStates = sections.value.loadStates
+        val loadStates = sectionItems.value.loadStates
 
         if (loadStates.refresh == LoadState.NOT_LOADING &&
             loadStates.append == LoadState.NOT_LOADING

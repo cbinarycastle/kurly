@@ -12,7 +12,7 @@ class ProductRepository @Inject constructor(
     private val localProductDataSource: LocalProductDataSource,
     private val remoteProductDataSource: RemoteProductDataSource,
 ) {
-    fun getProducts(sectionId: Int): Flow<List<Product>> = flow {
+    fun loadProducts(sectionId: Int): Flow<List<Product>> = flow {
         val products = remoteProductDataSource.getProducts(sectionId)
             .map {
                 val existingProduct = localProductDataSource.getProduct(it.id)
