@@ -34,7 +34,7 @@ class SectionViewHolder private constructor(
 
     private var productsJob: Job? = null
     private var adapter: ProductAdapter? = null
-    private var spacerItemDecoration: SpacerItemDecoration? = null
+    private val spacerItemDecorations: MutableList<SpacerItemDecoration> = mutableListOf()
 
     init {
         val itemAnimator = binding.productsRecyclerView.itemAnimator as? SimpleItemAnimator
@@ -56,9 +56,15 @@ class SectionViewHolder private constructor(
             adapter = this@SectionViewHolder.adapter
             layoutManager = sectionType.layoutManager(context)
 
-            spacerItemDecoration?.let { removeItemDecoration(it) }
-            spacerItemDecoration = sectionType.spacerItemDecoration(resources)
-                .also { addItemDecoration(it) }
+            spacerItemDecorations.forEach { removeItemDecoration(it) }
+            sectionType.spacerItemDecorations(resources)
+                .onEach { addItemDecoration(it) }
+                .also {
+                    with(spacerItemDecorations) {
+                        clear()
+                        addAll(it)
+                    }
+                }
         }
     }
 
@@ -113,22 +119,34 @@ private fun SectionType.layoutManager(context: Context) = when (this) {
     SectionType.GRID -> GridLayoutManager(context, GridSectionSpanCount)
 }
 
-private fun SectionType.spacerItemDecoration(resources: Resources) = when (this) {
-    SectionType.VERTICAL -> {
-        SpacerItemDecoration(
-            size = resources.getDimensionPixelSize(R.dimen.product_list_space),
-            orientation = SpacerItemDecoration.VERTICAL
-        )
+private fun SectionType.spacerItemDecorations(resources: Resources): List<SpacerItemDecoration> =
+    when (this) {
+        SectionType.VERTICAL -> {
+            listOf(
+                SpacerItemDecoration(
+                    size = resources.getDimensionPixelSize(R.dimen.product_list_vertical_space),
+                    orientation = SpacerItemDecoration.VERTICAL
+                )
+            )
+        }
+        SectionType.HORIZONTAL -> {
+            listOf(
+                SpacerItemDecoration(
+                    size = resources.getDimensionPixelSize(R.dimen.product_list_horizontal_space)
+                )
+            )
+        }
+        SectionType.GRID -> {
+            listOf(
+                SpacerItemDecoration(
+                    size = resources.getDimensionPixelSize(R.dimen.product_list_horizontal_space),
+                    spanCount = GridSectionSpanCount
+                ),
+                SpacerItemDecoration(
+                    size = resources.getDimensionPixelSize(R.dimen.product_list_vertical_space),
+                    spanCount = GridSectionSpanCount,
+                    orientation = SpacerItemDecoration.VERTICAL
+                )
+            )
+        }
     }
-    SectionType.HORIZONTAL -> {
-        SpacerItemDecoration(
-            size = resources.getDimensionPixelSize(R.dimen.product_list_space)
-        )
-    }
-    SectionType.GRID -> {
-        SpacerItemDecoration(
-            size = resources.getDimensionPixelSize(R.dimen.product_list_space),
-            spanCount = GridSectionSpanCount
-        )
-    }
-}

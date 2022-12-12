@@ -11,19 +11,19 @@
         <include layout="@layout/placeholder_product" />
 
         <Space
-            android:layout_width="@dimen/product_list_space"
+            android:layout_width="@dimen/product_list_horizontal_space"
             android:layout_height="wrap_content" />
 
         <include layout="@layout/placeholder_product" />
 
         <Space
-            android:layout_width="@dimen/product_list_space"
+            android:layout_width="@dimen/product_list_horizontal_space"
             android:layout_height="wrap_content" />
 
         <include layout="@layout/placeholder_product" />
 
         <Space
-            android:layout_width="@dimen/product_list_space"
+            android:layout_width="@dimen/product_list_horizontal_space"
             android:layout_height="wrap_content" />
 
         <include layout="@layout/placeholder_product" />

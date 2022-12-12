@@ -2,5 +2,6 @@
 <resources>
     <dimen name="small_product_width">150dp</dimen>
     <dimen name="small_product_height">200dp</dimen>
-    <dimen name="product_list_space">8dp</dimen>
+    <dimen name="product_list_horizontal_space">8dp</dimen>
+    <dimen name="product_list_vertical_space">18dp</dimen>
 </resources>

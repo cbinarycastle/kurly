@@ -21,30 +21,33 @@ class SpacerItemDecoration(
     ) {
         val position = parent.getChildAdapterPosition(view)
         val itemCount = parent.adapter?.itemCount ?: 0
-        val baseSpanCount = if (spanCount > 1) spanCount else itemCount
-
-        val isFirstItem = position % baseSpanCount == 0
-        val isLastItem = position % baseSpanCount == baseSpanCount - 1
 
         with(outRect) {
             when (orientation) {
                 HORIZONTAL -> {
+                    val baseSpanCount = if (spanCount > 1) spanCount else itemCount
+                    val isFirstLine = position % baseSpanCount == 0
+                    val isLastLine = position % baseSpanCount == baseSpanCount - 1
+
                     left = halfOfSize
                     right = halfOfSize
-                    if (isFirstItem) {
+                    if (isFirstLine) {
                         left = 0
                     }
-                    if (isLastItem) {
+                    if (isLastLine) {
                         right = 0
                     }
                 }
                 VERTICAL -> {
+                    val isFirstLine = position / spanCount == 0
+                    val isLastLine = position / spanCount == itemCount / spanCount - 1
+
                     top = halfOfSize
                     bottom = halfOfSize
-                    if (isFirstItem) {
+                    if (isFirstLine) {
                         top = 0
                     }
-                    if (isLastItem) {
+                    if (isLastLine) {
                         bottom = 0
                     }
                 }
