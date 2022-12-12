@@ -16,6 +16,9 @@ import io.github.cbinarycastle.kurly.databinding.ViewholderSectionBinding
 import io.github.cbinarycastle.kurly.domain.model.Product
 import io.github.cbinarycastle.kurly.domain.model.SectionType
 import io.github.cbinarycastle.kurly.ui.model.SectionItem
+import io.github.cbinarycastle.kurly.ui.product.GridProductAdapter
+import io.github.cbinarycastle.kurly.ui.product.HorizontalProductAdapter
+import io.github.cbinarycastle.kurly.ui.product.VerticalProductAdapter
 import io.github.cbinarycastle.kurly.util.layoutInflater
 import io.github.cbinarycastle.kurly.widget.SpacerItemDecoration
 import kotlinx.coroutines.Job
@@ -62,7 +65,7 @@ class SectionViewHolder private constructor(
         productsJob = viewLifecycle.coroutineScope.launch {
             flow.flowWithLifecycle(viewLifecycle).collect {
                 adapter?.submitList(it) {
-                    binding.shimmer.isVisible = it.isEmpty()
+                    binding.shimmer.root.isVisible = it.isEmpty()
                 }
             }
         }
@@ -93,8 +96,9 @@ class SectionViewHolder private constructor(
 private fun SectionType.adapter(
     toggleLikeProduct: (Product) -> Unit,
 ): ProductAdapter = when (this) {
-    SectionType.VERTICAL -> LargeProductAdapter(toggleLikeProduct)
-    SectionType.HORIZONTAL, SectionType.GRID -> SmallProductAdapter(toggleLikeProduct)
+    SectionType.VERTICAL -> VerticalProductAdapter(toggleLikeProduct)
+    SectionType.HORIZONTAL -> HorizontalProductAdapter(toggleLikeProduct)
+    SectionType.GRID -> GridProductAdapter(toggleLikeProduct)
 }
 
 private fun SectionType.layoutManager(context: Context) = when (this) {

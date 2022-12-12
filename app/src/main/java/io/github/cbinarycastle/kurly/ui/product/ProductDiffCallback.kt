@@ -1,4 +1,4 @@
-package io.github.cbinarycastle.kurly.ui.section
+package io.github.cbinarycastle.kurly.ui.product
 
 import androidx.recyclerview.widget.DiffUtil
 import io.github.cbinarycastle.kurly.domain.model.Product

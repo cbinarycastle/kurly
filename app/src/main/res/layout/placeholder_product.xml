@@ -6,8 +6,8 @@
 
     <View
         android:id="@+id/imagePlaceholder"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_width="@dimen/small_product_width"
+        android:layout_height="@dimen/small_product_height"
         android:background="@android:color/black"
         android:alpha="0.38"
         app:layout_constraintStart_toStartOf="parent"
