@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
@@ -50,6 +49,7 @@ class SectionViewHolder private constructor(
 
         with(binding.productsRecyclerView) {
             adapter = this@SectionViewHolder.adapter
+            layoutManager = sectionType.layoutManager(context)
 
             spacerItemDecoration?.let { removeItemDecoration(it) }
             spacerItemDecoration = sectionType.spacerItemDecoration(resources)
@@ -62,9 +62,7 @@ class SectionViewHolder private constructor(
         productsJob = viewLifecycle.coroutineScope.launch {
             flow.flowWithLifecycle(viewLifecycle).collect {
                 adapter?.submitList(it) {
-                    if (it.isNotEmpty()) {
-                        binding.shimmer.isVisible = false
-                    }
+                    binding.shimmer.isVisible = it.isEmpty()
                 }
             }
         }
@@ -126,12 +124,5 @@ private fun SectionType.spacerItemDecoration(resources: Resources) = when (this)
             size = resources.getDimensionPixelSize(R.dimen.product_list_space),
             spanCount = GridSectionSpanCount
         )
-    }
-}
-
-@BindingAdapter("sectionType")
-fun setLayoutManager(recyclerView: RecyclerView, sectionType: SectionType) {
-    with(recyclerView) {
-        layoutManager = sectionType.layoutManager(context)
     }
 }

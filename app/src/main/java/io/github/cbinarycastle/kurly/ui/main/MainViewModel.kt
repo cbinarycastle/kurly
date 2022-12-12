@@ -26,8 +26,6 @@ class MainViewModel @Inject constructor(
     private val unlikeProductUseCase: UnlikeProductUseCase,
 ) : ViewModel() {
 
-    private val productsFlowCache = mutableMapOf<Int, StateFlow<List<Product>>>()
-
     private val _loadEvent = MutableSharedFlow<LoadEvent>()
     private val loadEvent = flow {
         emit(LoadEvent.Refresh)
@@ -40,17 +38,10 @@ class MainViewModel @Inject constructor(
         initialValue = null
     )
 
-    private val loadEventAndResult = loadEvent
+    val sectionItems: StateFlow<LoadResult<List<SectionItem>>> = loadEvent
         .flatMapLatest { event ->
             loadSectionsUseCase(event.page).map { result -> event to result }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    val sectionItems: StateFlow<LoadResult<List<SectionItem>>> = loadEventAndResult
         .filterNotNull()
         .onEach { (_, result) ->
             if (result is Result.Success) {
@@ -62,7 +53,7 @@ class MainViewModel @Inject constructor(
         .map { (event, result) ->
             LoadResult(
                 data = sectionPagingData.items.map { section ->
-                    val productsFlow = loadProductsFlow(section.id)
+                    val productsFlow = getProductsFlow(section.id)
                     SectionItem(section, productsFlow)
                 },
                 loadStates = LoadStates(
@@ -81,7 +72,9 @@ class MainViewModel @Inject constructor(
 
     private val sectionPagingData = PagingData<Section>()
 
-    private fun loadProductsFlow(sectionId: Int): Flow<List<Product>> {
+    private val productsFlowCache = mutableMapOf<Int, StateFlow<List<Product>>>()
+
+    private fun getProductsFlow(sectionId: Int): Flow<List<Product>> {
         return productsFlowCache[sectionId] ?: run {
             loadProductsUseCase(sectionId)
                 .map { it.data ?: emptyList() }
@@ -96,6 +89,7 @@ class MainViewModel @Inject constructor(
 
     fun refresh() {
         sectionPagingData.clear()
+        productsFlowCache.clear()
         load(LoadEvent.Refresh)
     }
 
