@@ -18,6 +18,7 @@ private const val GridSectionSpanCount = 3
 
 class SectionViewHolder(
     private val binding: ViewholderSectionBinding,
+    private val toggleLikeProduct: (Product) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var spacerItemDecoration: SpacerItemDecoration? = null
@@ -28,7 +29,7 @@ class SectionViewHolder(
         with(binding.productsRecyclerView) {
             val sectionType = section.type
 
-            adapter = sectionType.adapter.apply {
+            adapter = sectionType.adapter(toggleLikeProduct).apply {
                 submitList(section.products)
             }
 
@@ -39,18 +40,12 @@ class SectionViewHolder(
     }
 }
 
-@BindingAdapter("sectionType")
-fun setLayoutManager(recyclerView: RecyclerView, sectionType: SectionType) {
-    with(recyclerView) {
-        layoutManager = sectionType.layoutManager(context)
-    }
+private fun SectionType.adapter(
+    toggleLikeProduct: (Product) -> Unit,
+): ListAdapter<Product, out RecyclerView.ViewHolder> = when (this) {
+    SectionType.VERTICAL -> LargeProductAdapter(toggleLikeProduct)
+    SectionType.HORIZONTAL, SectionType.GRID -> SmallProductAdapter(toggleLikeProduct)
 }
-
-private val SectionType.adapter: ListAdapter<Product, out RecyclerView.ViewHolder>
-    get() = when (this) {
-        SectionType.VERTICAL -> LargeProductAdapter()
-        SectionType.HORIZONTAL, SectionType.GRID -> SmallProductAdapter()
-    }
 
 private fun SectionType.layoutManager(context: Context) = when (this) {
     SectionType.VERTICAL -> LinearLayoutManager(context)
@@ -79,5 +74,12 @@ private fun SectionType.spacerItemDecoration(resources: Resources) = when (this)
             size = resources.getDimensionPixelSize(R.dimen.product_list_space),
             spanCount = GridSectionSpanCount
         )
+    }
+}
+
+@BindingAdapter("sectionType")
+fun setLayoutManager(recyclerView: RecyclerView, sectionType: SectionType) {
+    with(recyclerView) {
+        layoutManager = sectionType.layoutManager(context)
     }
 }

@@ -19,8 +19,9 @@ data class SectionInfo(
 
 data class PagingInfo(@SerializedName("next_page") val nextPage: Int)
 
-fun GetSectionsResponse.toSectionPage() = Page(
+fun GetSectionsResponse.toSectionPage(currentPage: Int) = Page(
     data = data.map(SectionInfo::toSection),
+    currentPage = currentPage,
     nextPage = paging?.nextPage
 )
 

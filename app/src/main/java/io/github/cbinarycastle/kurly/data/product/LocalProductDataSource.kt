@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalProductDataSource {
 
-    fun getProducts(sectionId: Int): Flow<List<Product>>
+    fun loadProducts(sectionId: Int): Flow<List<Product>>
+
+    suspend fun getProduct(productId: Int): Product?
 
     suspend fun saveProducts(sectionId: Int, products: List<Product>)
 

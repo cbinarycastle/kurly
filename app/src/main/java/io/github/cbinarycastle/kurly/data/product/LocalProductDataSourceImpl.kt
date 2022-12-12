@@ -7,10 +7,14 @@ import kotlinx.coroutines.flow.map
 
 class LocalProductDataSourceImpl(private val productDao: ProductDao) : LocalProductDataSource {
 
-    override fun getProducts(sectionId: Int): Flow<List<Product>> {
+    override fun loadProducts(sectionId: Int): Flow<List<Product>> {
         return productDao.loadAllBySectionId(sectionId)
             .distinctUntilChanged()
             .map { it.map(ProductEntity::toProduct) }
+    }
+
+    override suspend fun getProduct(productId: Int): Product? {
+        return productDao.getById(productId)?.toProduct()
     }
 
     override suspend fun saveProducts(sectionId: Int, products: List<Product>) {

@@ -14,9 +14,17 @@ class ProductRepository @Inject constructor(
 ) {
     fun getProducts(sectionId: Int): Flow<List<Product>> = flow {
         val products = remoteProductDataSource.getProducts(sectionId)
+            .map {
+                val existingProduct = localProductDataSource.getProduct(it.id)
+                if (existingProduct == null) {
+                    it
+                } else {
+                    it.copy(isLiked = existingProduct.isLiked)
+                }
+            }
         localProductDataSource.saveProducts(sectionId, products)
 
-        val savedProducts = localProductDataSource.getProducts(sectionId)
+        val savedProducts = localProductDataSource.loadProducts(sectionId)
         emitAll(savedProducts)
     }
 

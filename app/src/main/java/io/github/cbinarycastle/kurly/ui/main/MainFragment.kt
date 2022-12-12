@@ -37,8 +37,8 @@ class MainFragment : Fragment() {
             viewModel.refresh()
         }
 
-        val sectionAdapter = SectionAdapter()
-        val loadStateAdapter = LoadStateAdapter(retry = viewModel::retry)
+        val sectionAdapter = SectionAdapter(viewModel::toggleLikeProduct)
+        val loadStateAdapter = LoadStateAdapter(viewModel::retry)
 
         with(binding.sectionsRecyclerView) {
             adapter = ConcatAdapter(sectionAdapter, loadStateAdapter)

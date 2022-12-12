@@ -3,7 +3,10 @@ package io.github.cbinarycastle.kurly.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.cbinarycastle.kurly.domain.LikeProductUseCase
 import io.github.cbinarycastle.kurly.domain.LoadSectionsUseCase
+import io.github.cbinarycastle.kurly.domain.UnlikeProductUseCase
+import io.github.cbinarycastle.kurly.domain.model.Product
 import io.github.cbinarycastle.kurly.domain.model.Result
 import io.github.cbinarycastle.kurly.domain.model.Section
 import io.github.cbinarycastle.kurly.ui.model.*
@@ -14,9 +17,11 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase) : ViewModel() {
-
-    private var nextPage: Int? = null
+class MainViewModel @Inject constructor(
+    loadSectionsUseCase: LoadSectionsUseCase,
+    private val likeProductUseCase: LikeProductUseCase,
+    private val unlikeProductUseCase: UnlikeProductUseCase,
+) : ViewModel() {
 
     private val _loadEvent = MutableSharedFlow<LoadEvent>()
     private val loadEvent = flow {
@@ -45,13 +50,13 @@ class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase
         .onEach { (_, result) ->
             if (result is Result.Success) {
                 val page = result.data
-                sectionList.addAll(page.data)
+                sectionPagingData.updatePage(page)
                 nextPage = page.nextPage
             }
         }
         .map { (event, result) ->
             LoadResult(
-                data = sectionList.toList(),
+                data = sectionPagingData.items,
                 loadStates = LoadStates(
                     refresh = if (event == LoadEvent.Refresh) result.loadState else LoadState.NOT_LOADING,
                     append = if (event is LoadEvent.Append) result.loadState else LoadState.NOT_LOADING
@@ -64,10 +69,12 @@ class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase
             initialValue = LoadResult(data = emptyList(), loadStates = LoadStates.IDLE)
         )
 
-    private val sectionList = mutableListOf<Section>()
+    private var nextPage: Int? = null
+
+    private val sectionPagingData = PagingData<Section>()
 
     fun refresh() {
-        sectionList.clear()
+        sectionPagingData.clear()
         load(LoadEvent.Refresh)
     }
 
@@ -92,6 +99,16 @@ class MainViewModel @Inject constructor(loadSectionsUseCase: LoadSectionsUseCase
     private fun load(event: LoadEvent) {
         viewModelScope.launch {
             _loadEvent.emit(event)
+        }
+    }
+
+    fun toggleLikeProduct(product: Product) {
+        viewModelScope.launch {
+            if (product.isLiked) {
+                unlikeProductUseCase(product)
+            } else {
+                likeProductUseCase(product)
+            }
         }
     }
 }

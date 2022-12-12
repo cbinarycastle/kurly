@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import io.github.cbinarycastle.kurly.databinding.ViewholderSectionBinding
+import io.github.cbinarycastle.kurly.domain.model.Product
 import io.github.cbinarycastle.kurly.domain.model.Section
 import io.github.cbinarycastle.kurly.util.layoutInflater
 
@@ -15,7 +16,8 @@ private val DiffCallback = object : DiffUtil.ItemCallback<Section>() {
         oldItem == newItem
 }
 
-class SectionAdapter : ListAdapter<Section, SectionViewHolder>(DiffCallback) {
+class SectionAdapter(private val toggleLikeProduct: (Product) -> Unit) :
+    ListAdapter<Section, SectionViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder {
         return SectionViewHolder(
@@ -23,7 +25,8 @@ class SectionAdapter : ListAdapter<Section, SectionViewHolder>(DiffCallback) {
                 parent.context.layoutInflater,
                 parent,
                 false
-            )
+            ),
+            toggleLikeProduct = toggleLikeProduct
         )
     }
 

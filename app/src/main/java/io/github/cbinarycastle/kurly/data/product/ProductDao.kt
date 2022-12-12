@@ -12,6 +12,9 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE section_id = :sectionId")
     fun loadAllBySectionId(sectionId: Int): Flow<List<ProductEntity>>
 
+    @Query("SELECT * FROM product WHERE id = :id")
+    suspend fun getById(id: Int): ProductEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(products: List<ProductEntity>)
 

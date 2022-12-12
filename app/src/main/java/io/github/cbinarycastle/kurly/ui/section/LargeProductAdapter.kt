@@ -6,7 +6,9 @@ import io.github.cbinarycastle.kurly.databinding.ViewholderLargeProductBinding
 import io.github.cbinarycastle.kurly.domain.model.Product
 import io.github.cbinarycastle.kurly.util.layoutInflater
 
-class LargeProductAdapter : ListAdapter<Product, LargeProductViewHolder>(ProductDiffCallback) {
+class LargeProductAdapter(
+    private val toggleLikeProduct: (Product) -> Unit,
+) : ListAdapter<Product, LargeProductViewHolder>(ProductDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LargeProductViewHolder {
         return LargeProductViewHolder(
@@ -14,7 +16,8 @@ class LargeProductAdapter : ListAdapter<Product, LargeProductViewHolder>(Product
                 parent.context.layoutInflater,
                 parent,
                 false
-            )
+            ),
+            toggleLikeProduct = { position -> toggleLikeProduct(getItem(position)) }
         )
     }
 
