@@ -39,8 +39,11 @@ object Libs {
     }
 
     object Coroutines {
-        private const val VERSION = "1.6.4"
-        const val ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$VERSION"
+        const val ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    }
+
+    object Facebook {
+        const val SHIMMER = "com.facebook.shimmer:shimmer:0.5.0"
     }
 
     object Gson {

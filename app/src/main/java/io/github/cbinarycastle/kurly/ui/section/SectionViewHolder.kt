@@ -3,6 +3,7 @@ package io.github.cbinarycastle.kurly.ui.section
 import android.content.Context
 import android.content.res.Resources
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
@@ -60,7 +61,11 @@ class SectionViewHolder private constructor(
         productsJob?.cancel()
         productsJob = viewLifecycle.coroutineScope.launch {
             flow.flowWithLifecycle(viewLifecycle).collect {
-                adapter?.submitList(it)
+                adapter?.submitList(it) {
+                    if (it.isNotEmpty()) {
+                        binding.shimmer.isVisible = false
+                    }
+                }
             }
         }
     }

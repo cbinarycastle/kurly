@@ -76,6 +76,8 @@ dependencies {
 
     implementation(Libs.Coroutines.ANDROID)
 
+    implementation(Libs.Facebook.SHIMMER)
+
     implementation(Libs.Hilt.ANDROID)
     kapt(Libs.Hilt.COMPILER)
 
