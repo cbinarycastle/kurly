@@ -7,10 +7,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import io.github.cbinarycastle.kurly.R
 import io.github.cbinarycastle.kurly.databinding.ViewholderSectionBinding
 import io.github.cbinarycastle.kurly.domain.model.Product
@@ -38,6 +35,11 @@ class SectionViewHolder private constructor(
     private var productsJob: Job? = null
     private var adapter: ProductAdapter? = null
     private var spacerItemDecoration: SpacerItemDecoration? = null
+
+    init {
+        val itemAnimator = binding.productsRecyclerView.itemAnimator as? SimpleItemAnimator
+        itemAnimator?.supportsChangeAnimations = false
+    }
 
     fun bind(item: SectionItem) {
         val section = item.section
